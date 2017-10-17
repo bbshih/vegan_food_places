@@ -1,0 +1,23 @@
+{
+  "name": "veganfoodplaces",
+  "version": "1.0.0",
+  "description": "Directory and reviews of vegan food",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bbshih/vegan-food-places.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "Billy Shih",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^4.0.0-beta.4",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  }
+}
