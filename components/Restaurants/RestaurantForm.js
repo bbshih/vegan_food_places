@@ -1,10 +1,17 @@
 import {gql, graphql} from 'react-apollo'
+import NeighborhoodsDropdown from './NeighborhoodsDropdown'
 
+let neighborhoodId = ''
 function RestaurantForm({createRestaurant}) {
+  function handleChange(id) {
+    neighborhoodId = id
+    debugger
+  }
   function handleSubmit(e) {
     e.preventDefault()
     const {elements} = e.target
     let name = elements.name.value
+    // let neighborhoodId = elements.neighborhoodId.value
     let url = elements.url.value
     let address1 = elements.address1.value
     let address2 = elements.address2.value
@@ -17,7 +24,16 @@ function RestaurantForm({createRestaurant}) {
       url = `http://${url}`
     }
 
-    createRestaurant(name, url, address1, address2, city, state, zipCode)
+    createRestaurant(
+      name,
+      neighborhoodId,
+      url,
+      address1,
+      address2,
+      city,
+      state,
+      zipCode
+    )
 
     // reset form
     // elements.name.value = ''
@@ -27,25 +43,22 @@ function RestaurantForm({createRestaurant}) {
   return (
     <form onSubmit={handleSubmit}>
       <input placeholder="name" name="name" required />
+      <NeighborhoodsDropdown handleChange={handleChange} />
       <input placeholder="url" name="url" />
       <input placeholder="address1" name="address1" />
       <input placeholder="address2" name="address2" />
       <input placeholder="city" name="city" />
-      <input placeholder="state" name="state" required />
+      <input placeholder="state" name="state" value="WA" required />
       <input placeholder="zipCode" name="zipCode" />
       <button type="submit">Submit</button>
       <style jsx>{`
         form {
-          border-bottom: 1px solid #ececec;
-          padding-bottom: 20px;
-          margin-bottom: 20px;
+          padding: 1rem 0;
         }
-        h1 {
-          font-size: 20px;
-        }
+
         input {
           display: block;
-          margin-bottom: 10px;
+          margin-bottom: 1rem;
         }
       `}</style>
     </form>
@@ -55,15 +68,17 @@ function RestaurantForm({createRestaurant}) {
 const createRestaurant = gql`
   mutation createRestaurant(
     $name: String!
+    $neighborhoodId: ID!
     $address1: String
     $address2: String
     $city: String
     $state: String!
     $zipCode: String
-    $url: String!
+    $url: String
   ) {
     createRestaurant(
       name: $name
+      neighborhoodsIds: [$neighborhoodId]
       address1: $address1
       address2: $address2
       city: $city
@@ -72,6 +87,10 @@ const createRestaurant = gql`
       url: $url
     ) {
       id
+      neighborhoods {
+        id
+        name
+      }
       name
       address1
       address2
@@ -85,9 +104,27 @@ const createRestaurant = gql`
 
 export default graphql(createRestaurant, {
   props: ({mutate}) => ({
-    createRestaurant: (name, url, address1, address2, city, state, zipCode) =>
+    createRestaurant: (
+      name,
+      neighborhoodId,
+      url,
+      address1,
+      address2,
+      city,
+      state,
+      zipCode
+    ) =>
       mutate({
-        variables: {name, url, address1, address2, city, state, zipCode},
+        variables: {
+          name,
+          neighborhoodId,
+          url,
+          address1,
+          address2,
+          city,
+          state,
+          zipCode
+        },
         updateQueries: {
           allRestaurants: (previousResult, {mutationResult}) => {
             const newPost = mutationResult.data.createRestaurant
