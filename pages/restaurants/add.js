@@ -1,9 +1,15 @@
+import {gql, graphql} from 'react-apollo'
+import withData from '../../lib/withData'
 import Layout from '../../components/Layout'
-export default function RestaurantAdd() {
+import RestaurantForm from '../../components/Restaurants/RestaurantForm'
+
+function RestaurantAdd() {
   return (
     <Layout subtitle="Add Restaurant">
       <h1>Add Restaurant</h1>
-      <div>Form here</div>
+      <RestaurantForm />
     </Layout>
   )
 }
+
+export default withData(RestaurantAdd)

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 function Header(props) {
   const {subtitle} = props
   return (
-    <div>
+    <header>
       <Head>
         <title>Vegan Food Places 🥑 {subtitle}</title>
         <meta charSet="utf-8" />
@@ -24,7 +24,31 @@ function Header(props) {
           <a>Add Restaurant</a>
         </Link>
       </nav>
-    </div>
+      <style jsx>
+        {`
+          header {
+            font-size: 1rem;
+            padding: 0 1rem;
+            background-color: black;
+            height: 3rem;
+          }
+
+          a {
+            height: 2rem;
+            line-height: 2rem;
+            padding: 0.5rem;
+          }
+          a:hover {
+            background-color: #31dd51;
+          }
+          a:link,
+          a:visited {
+            color: #fff;
+            display: inline-block;
+          }
+        `}
+      </style>
+    </header>
   )
 }
 
