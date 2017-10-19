@@ -11,20 +11,36 @@ function renderNeighborhoodOption(neighborhood) {
 class NeighborhoodsDropdown extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      value: ''
+    }
     this.handleChange = this.handleChange.bind(this)
   }
   handleChange(e) {
-    this.props.handleChange(e.target.value)
+    const {value: neighborhoodId} = e.target
+    this.setState({
+      ...this.state,
+      value: neighborhoodId
+    })
+    this.props.handleChange(neighborhoodId)
   }
   render() {
     const {
       data: {loading, error, allNeighborhoods, _allNeighborhoodsMeta},
       loadMoreRestaurants
     } = this.props
+
     if (error) return <div>{console.log(error)}</div>
     if (allNeighborhoods && allNeighborhoods.length) {
       return (
-        <select name="neighborhoods" onChange={this.handleChange}>
+        <select
+          name="neighborhoods"
+          onChange={this.handleChange}
+          value={this.state.value}
+        >
+          <option value="" disabled>
+            Choose neighborhood
+          </option>
           {allNeighborhoods.map(neighborhood =>
             renderNeighborhoodOption(neighborhood)
           )}

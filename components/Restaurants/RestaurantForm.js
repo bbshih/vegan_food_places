@@ -5,13 +5,11 @@ let neighborhoodId = ''
 function RestaurantForm({createRestaurant}) {
   function handleChange(id) {
     neighborhoodId = id
-    debugger
   }
   function handleSubmit(e) {
     e.preventDefault()
     const {elements} = e.target
     let name = elements.name.value
-    // let neighborhoodId = elements.neighborhoodId.value
     let url = elements.url.value
     let address1 = elements.address1.value
     let address2 = elements.address2.value
@@ -44,21 +42,27 @@ function RestaurantForm({createRestaurant}) {
     <form onSubmit={handleSubmit}>
       <input placeholder="name" name="name" required />
       <NeighborhoodsDropdown handleChange={handleChange} />
+      <button type="submit">Submit</button>
+      <hr />
+      <small>Optional fields</small>
       <input placeholder="url" name="url" />
+      <input placeholder="state" name="state" value="WA" />
       <input placeholder="address1" name="address1" />
       <input placeholder="address2" name="address2" />
-      <input placeholder="city" name="city" />
-      <input placeholder="state" name="state" value="WA" required />
+      <input placeholder="city" name="city" value="Seattle" />
       <input placeholder="zipCode" name="zipCode" />
-      <button type="submit">Submit</button>
       <style jsx>{`
-        form {
-          padding: 1rem 0;
-        }
-
         input {
           display: block;
           margin-bottom: 1rem;
+        }
+        button {
+          color: #fff;
+          background-color: #31dd51;
+          border: 2px solid #fff;
+          padding: 0.5rem 1rem;
+          border-radius: 1rem;
+          box-shadow: 0 1px 1px gray;
         }
       `}</style>
     </form>
@@ -72,7 +76,7 @@ const createRestaurant = gql`
     $address1: String
     $address2: String
     $city: String
-    $state: String!
+    $state: String
     $zipCode: String
     $url: String
   ) {

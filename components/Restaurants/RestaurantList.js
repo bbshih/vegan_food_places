@@ -1,5 +1,5 @@
 import {gql, graphql} from 'react-apollo'
-
+import allRestaurants from '../../gql/allRestaurants'
 const RESTAURANTS_PER_PAGE = 10
 
 function getNeighborhoodNames(neighborhoods) {
@@ -37,22 +37,6 @@ function RestaurantList({
   }
   return <div>Loading</div>
 }
-
-const allRestaurants = gql`
-  query allRestaurants($first: Int!, $skip: Int!) {
-    allRestaurants(orderBy: name_ASC, first: $first, skip: $skip) {
-      id
-      name
-      url
-      neighborhoods {
-        name
-      }
-    }
-    _allRestaurantsMeta {
-      count
-    }
-  }
-`
 
 // The `graphql` wrapper executes a GraphQL query and makes the results
 // available on the `data` prop of the wrapped component (RestaurantList)
