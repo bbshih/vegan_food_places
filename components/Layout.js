@@ -1,7 +1,6 @@
 import Header from './Header'
 import Footer from './Footer'
 import PropTypes from 'prop-types'
-import stylesheet from 'styles/global.scss'
 
 function Layout(props) {
   const {subtitle} = props
@@ -14,7 +13,6 @@ function Layout(props) {
           <Footer />
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html: stylesheet}} />
       <style jsx>{`
         .main {
           padding: 0 1rem;
