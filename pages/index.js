@@ -1,5 +1,6 @@
 import Layout from '../components/Layout'
 import withData from '../lib/withData'
+import Card from '../components/shared/Card'
 import RestaurantList from '../components/Restaurants/RestaurantList'
 import NeighborhoodList from '../components/Restaurants/NeighborhoodList'
 import RestaurantForm from '../components/Restaurants/RestaurantForm'
@@ -41,19 +42,28 @@ class IndexPage extends React.Component {
           {this.state.listType === NEIGHBORHOOD && <NeighborhoodList />}
         </div>
         <div className="right">
-          <h3>Add Restaurant</h3>
-          <RestaurantForm />
+          <Card>
+            <h3 className="add-title">Add Restaurant</h3>
+            <RestaurantForm />
+          </Card>
         </div>
-        <style jsx>{`
-          .main {
-            grid-column: 1 / span 2;
-            grid-row: 1 /1;
-          }
-          .right {
-            grid-column: 3;
-            grid-row: 1 /1;
-          }
-        `}</style>
+        <style jsx>
+          {`
+            .main {
+              grid-column: 1 / span 2;
+              grid-column-gap: 1rem;
+              grid-row: 1 /1;
+            }
+            .right {
+              grid-column: 3;
+              grid-row: 1 /1;
+              padding-left: 1rem;
+            }
+            .add-title {
+              margin-top: 0;
+            }
+          `}
+        </style>
       </Layout>
     )
   }
