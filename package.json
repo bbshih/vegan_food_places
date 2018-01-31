@@ -15,6 +15,7 @@
   "author": "Billy Shih",
   "license": "ISC",
   "dependencies": {
+    "babel-plugin-styled-components": "^1.5.0",
     "graphql": "^0.11.7",
     "isomorphic-fetch": "^2.2.1",
     "next": "^4.0.0-beta.4",
