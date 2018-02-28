@@ -1,4 +1,4 @@
-import {gql} from 'react-apollo'
+import gql from 'graphql-tag'
 
 const allRestaurants = gql`
   query allRestaurants($first: Int!, $skip: Int!) {

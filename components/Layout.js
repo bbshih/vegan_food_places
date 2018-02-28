@@ -4,6 +4,7 @@ import Footer from './Footer'
 
 function Layout(props) {
   const { subtitle, children } = props
+
   return (
     <div className="layout">
       <Header subtitle={subtitle} />

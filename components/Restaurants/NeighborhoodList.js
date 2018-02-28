@@ -1,4 +1,4 @@
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import Card from '../shared/Card'
 import allNeighborhoods from '../../gql/allNeighborhoods'
 

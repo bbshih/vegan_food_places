@@ -1,4 +1,4 @@
-import {gql, graphql} from 'react-apollo'
+import { graphql } from 'react-apollo'
 import withData from '../../lib/withData'
 import Layout from '../../components/Layout'
 import RestaurantForm from '../../components/Restaurants/RestaurantForm'

@@ -1,0 +1,50 @@
+# projectId: cj8gw854h07pk0131sgcdukzv
+# version: 34
+
+type File @model {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+}
+
+type Neighborhood @model {
+  id: ID! @isUnique
+  name: String!
+  restaurants: [Restaurant!]! @relation(name: "RestaurantOnNeighborhood")
+}
+
+type Restaurant @model {
+  address1: String
+  address2: String
+  city: String
+  id: ID! @isUnique
+  name: String!
+  neighborhoods: [Neighborhood!]! @relation(name: "RestaurantOnNeighborhood")
+  reviews: [Review!]! @relation(name: "ReviewOnRestaurant")
+  state: String
+  url: String
+  zipCode: String
+}
+
+type Review @model {
+  id: ID! @isUnique
+  restaurant: Restaurant @relation(name: "ReviewOnRestaurant")
+  score: Int!
+  text: String!
+  title: String!
+  user: User @relation(name: "ReviewOnUser")
+}
+
+type User @model {
+  createdAt: DateTime!
+  email: String @isUnique
+  id: ID! @isUnique
+  password: String
+  review: Review @relation(name: "ReviewOnUser")
+  updatedAt: DateTime!
+}

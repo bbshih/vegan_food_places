@@ -1,4 +1,4 @@
-import {gql, graphql} from 'react-apollo'
+import { graphql } from 'react-apollo'
 import allRestaurants from '../../gql/allRestaurants'
 const RESTAURANTS_PER_PAGE = 10
 
@@ -6,7 +6,7 @@ function getNeighborhoodNames(neighborhoods) {
   return neighborhoods.map(neighborhood => neighborhood.name).join(', ')
 }
 function RestaurantList({
-  data: {loading, error, allRestaurants, _allRestaurantsMeta},
+  data: { loading, error, allRestaurants, _allRestaurantsMeta },
   loadMoreRestaurants
 }) {
   if (error) return <div>{console.log(error)}</div>
@@ -47,14 +47,14 @@ export default graphql(allRestaurants, {
       first: RESTAURANTS_PER_PAGE
     }
   },
-  props: ({data}) => ({
+  props: ({ data }) => ({
     data,
     loadMoreRestaurants: () => {
       return data.fetchMore({
         variables: {
           skip: data.allRestaurants.length
         },
-        updateQuery: (previousResult, {fetchMoreResult}) => {
+        updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
             return previousResult
           }
