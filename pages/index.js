@@ -1,9 +1,6 @@
-import cookie from 'cookie'
 import { withApollo, compose } from 'react-apollo'
-
+import PropTypes from 'prop-types'
 import withData from '../lib/withData'
-import redirect from '../lib/redirect'
-import checkLoggedIn from '../lib/checkLoggedIn'
 import Layout from '../components/Layout'
 import Card from '../components/shared/Card'
 import RestaurantList from '../components/Restaurants/RestaurantList'
@@ -14,15 +11,10 @@ const RESTAURANT = 'Restaurant'
 const NEIGHBORHOOD = 'Neighborhood'
 
 class Index extends React.Component {
-  static async getInitialProps(context, apolloClient) {
-    const { loggedInUser } = await checkLoggedIn(context, apolloClient)
-
-    if (!loggedInUser.user) {
-      // If not signed in, send them somewhere more useful
-      redirect(context, '/signin')
-    }
-
-    return { loggedInUser }
+  static propTypes = {
+    url: PropTypes.shape({
+      pathname: PropTypes.string
+    }).isRequired
   }
 
   constructor(props) {
@@ -31,19 +23,6 @@ class Index extends React.Component {
       listType: NEIGHBORHOOD
     }
     this.handleSwitchListType = this.handleSwitchListType.bind(this)
-  }
-
-  signout() {
-    document.cookie = cookie.serialize('token', '', {
-      maxAge: -1 // Expire the cookie immediately
-    })
-
-    // Force a reload of all the current queries now that the user is
-    // logged in, so we don't accidentally leave any state around.
-    this.props.client.cache.reset().then(() => {
-      // Redirect to a more useful page when signed out
-      redirect({}, '/signin')
-    })
   }
 
   handleSwitchListType() {
@@ -60,10 +39,6 @@ class Index extends React.Component {
       <Layout subtitle="Home" pathname={this.props.url.pathname}>
         <div className="main">
           <h1>Vegan Food Places</h1>
-          <div>
-            Hello {this.props.loggedInUser.user.name}!<br />
-            <button onClick={this.signout}>Sign out</button>
-          </div>
           <div>
             Switch to: {' '}
             {this.state.listType === RESTAURANT ? (

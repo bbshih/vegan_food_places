@@ -1,103 +1,109 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import { withApollo, compose } from 'react-apollo'
+import styled from 'styled-components'
+import cookie from 'cookie'
 import PropTypes from 'prop-types'
+import withData from '../lib/withData'
+import redirect from '../lib/redirect'
+import checkLoggedIn from '../lib/checkLoggedIn'
+import Link from './shared/Link'
 
-function Header(props) {
-  const {subtitle} = props
-  return (
-    <header>
-      <Head>
-        <title>Vegan Food Places 🥑 {subtitle}</title>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link
-          href="https://fonts.googleapis.com/css?family=Lato:400"
-          rel="stylesheet"
-        />
-      </Head>
-      <nav>
-        <Link href="/">
-          <a>Home</a>
-        </Link>{' '}
-        -
-        <Link href="/about">
-          <a>About</a>
-        </Link>{' '}
-        -
-        <Link href="/restaurants/add">
-          <a>Add Restaurant</a>
-        </Link>
-      </nav>
-      <style jsx global>{`
-        html {
-          font-family: 'Lato', sans-serif;
-          font-size: 20px;
-        }
-        @media (max-width: 900px) {
-          html {
-            font-size: 18px;
-          }
-        }
-        @media (max-width: 400px) {
-          html {
-            font-size: 15px;
-          }
-        }
+const HeaderComponent = styled.header`
+  font-size: 1rem;
+  padding: 0 1rem;
+  background-color: black;
+  height: 3rem;
+`
 
-        /* Type will scale with document */
-        h1 {
-          font-size: 3em;
-          margin-top: 1rem;
-        }
-        h2 {
-          font-size: 2.5em;
-          margin-top: 1rem;
-        }
-        h3 {
-          font-size: 2em;
-          margin-top: 1rem;
-        }
-        a {
-          text-decoration: underline;
-        }
-        a:hover {
-          background-color: #31dd51;
-        }
-        a:link,
-        a:active,
-        a:visited {
-          color: #000;
-        }
-      `}</style>
-      <style jsx>
-        {`
-          header {
-            font-size: 1rem;
-            padding: 0 1rem;
-            background-color: black;
-            height: 3rem;
-          }
+const NavLink = styled.a`
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0.5rem;
 
-          a {
-            height: 2rem;
-            line-height: 2rem;
-            padding: 0.5rem;
-          }
-          a:hover {
-            background-color: #31dd51;
-          }
-          a:link,
-          a:visited {
-            color: #fff;
-            display: inline-block;
-          }
-        `}
-      </style>
-    </header>
-  )
+  &:hover {
+    background-color: #31dd51;
+  }
+
+  &:link,
+  &:visited {
+    color: #fff;
+    display: inline-block;
+  }
+`
+
+const NavButton = NavLink.withComponent('button')
+
+class Header extends React.Component {
+  static async getInitialProps(context, apolloClient) {
+    const { loggedInUser } = await checkLoggedIn(context, apolloClient)
+
+    return { loggedInUser }
+  }
+
+  static propTypes = {
+    client: PropTypes.object.required,
+    loggedInUser: PropTypes.object,
+    subtitle: PropTypes.string
+  }
+
+  signout() {
+    const { client } = this.props
+    document.cookie = cookie.serialize('token', '', {
+      maxAge: -1 // Expire the cookie immediately
+    })
+
+    // Force a reload of all the current queries now that the user is
+    // logged in, so we don't accidentally leave any state around.
+    client.cache.reset().then(() => {
+      // Redirect to a more useful page when signed out
+      redirect({}, '/signin')
+    })
+  }
+
+  renderAuth() {
+    const { loggedInUser } = this.props
+    if (loggedInUser) {
+      return (
+        <div className="signed-in">
+          {loggedInUser.user.name}
+          <NavButton onClick={this.signOut}>Sign out</NavButton>
+        </div>
+      )
+    }
+
+    return (
+      <Link href="/signin">
+        <NavLink>Sign In</NavLink>
+      </Link>
+    )
+  }
+  render() {
+    const { subtitle } = this.props
+    return (
+      <HeaderComponent>
+        <nav>
+          <Link href="/">
+            <NavLink>Home</NavLink>
+          </Link>{' '}
+          -
+          <Link href="/about">
+            <NavLink>About</NavLink>
+          </Link>{' '}
+          -
+          <Link href="/restaurants/add">
+            <NavLink>Add Restaurant</NavLink>
+          </Link>
+          {this.renderAuth()}
+        </nav>
+      </HeaderComponent>
+    )
+  }
 }
-
 Header.propTypes = {
   subtitle: PropTypes.string
 }
-export default Header
+export default compose(
+  // withData gives us server-side graphql queries before rendering
+  withData,
+  // withApollo exposes `this.props.client` used when logging out
+  withApollo
+)(Header)
